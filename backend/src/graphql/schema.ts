@@ -1,53 +1,18 @@
-import { buildSchema } from "graphql";
+import { graphqlHTTP } from "express-graphql";
+import { GraphQLSchema } from "graphql";
+import RootMutationType from "./mutation";
+import RootQueryType from "./query";
 
-const schema = buildSchema(`
+// root schema declaration start from here
+const schema = new GraphQLSchema({
+  query: RootQueryType,
+  mutation: RootMutationType,
+});
 
-type CommentUser{
-    _id : String,
-    name : String
-}
+// graphQL HTTP config
+const graphql = graphqlHTTP({
+  schema,
+  graphiql: true,
+});
 
-type Comments{
-    message : String,
-    timeStamp : Float,
-    comUser : [CommentUser]
-
-}
-
-type UserPost{
-    _id : String,
-    title : String,
-    description : String,
-    image : String,
-    timeStamp : Float,
-    comment : [Comments]
-}
-type User{
-    _id : String,
-    name : String,
-    email : String,
-    phone : String,
-    image : String,
-    join : Float
-}
-
-type Post{
-    _id : String,
-    owner : String,
-    title : String,
-    description : String,
-    image : String,
-    timeStamp : Float,
-    comment : [Comments]
-}
-
-
-type Query{
-    user : [User],
-    FindPostByUser(owner : String) : [Post]
-}
-`)
-
-
-
-export default schema
+export default graphql;
